@@ -2,7 +2,7 @@ Package: statcastr
 Title: Build a Database of Statcast Data
 Version: 0.0.0.9001
 Date: 2018-07-19
-Authors@R: person("Ben", "Baumer", email = "ben.baumer@gmail.com",
+Authors@R: person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com",
       role = c("aut", "cre"))
 Description: Baseball Savant provides a website which allows you to download
     Statcast data, but each query is limited to 40 thousand rows. This package
