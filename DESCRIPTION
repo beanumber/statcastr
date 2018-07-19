@@ -1,8 +1,13 @@
 Package: statcastr
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Title: Build a Database of Statcast Data
+Version: 0.0.0.9001
+Date: 2018-07-19
+Authors@R: person("Ben", "Baumer", email = "ben.baumer@gmail.com",
+      role = c("aut", "cre"))
+Description: Baseball Savant provides a website which allows you to download
+    Statcast data, but each query is limited to 40 thousand rows. This package
+    facilitates the ETL process of downloading, transforming, and loading into 
+    SQL monthly dumps of Statcast data.
 Depends: 
   R (>= 3.4.0),
   etl
@@ -15,3 +20,5 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+URL: http://github.com/beanumber/statcastr
+BugReports: https://github.com/beanumber/statcastr/issues
