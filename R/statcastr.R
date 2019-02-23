@@ -1,12 +1,12 @@
+globalVariables(c("month_begin", "sz_top", "sz_bot", "game_date"))
+
 #' Scrape Statcast data
 #' @param obj ETL object
 #' @param years A numeric vector of years
 #' @param months A numeric vector of months
 #' @param ... arguments passed to \code{\link[baseballr]{scrape_statcast_savant_batter_all}}
 #' @import etl
-#' @importFrom dplyr mutate_ arrange_ bind_rows %>%
-#' @importFrom readr write_csv
-#' @importFrom lubridate days
+#' @importFrom dplyr %>%
 #' @importFrom baseballr scrape_statcast_savant_batter_all
 #' @export
 #' @examples
@@ -31,12 +31,12 @@ etl_extract.etl_statcastr <- function(obj, years = 2017, months = 6, ...) {
 scrape_statcast_month <- function(obj, year, month) {
 
   dates <- etl::valid_year_month(year, month, begin = "2015-03-01") %>%
-    mutate(month_q1 = month_begin + lubridate::days(7),
-           month_middle = month_begin + lubridate::days(14),
-           month_q3 = month_begin + lubridate::days(21),
-           filename = paste("statcast", year,
-                            stringr::str_pad(month, width = 2, side = "left", pad = 0),
-                            "all.csv", sep = "_"))
+    dplyr::mutate(month_q1 = month_begin + lubridate::days(7),
+                  month_middle = month_begin + lubridate::days(14),
+                  month_q3 = month_begin + lubridate::days(21),
+                  filename = paste("statcast", year,
+                                   stringr::str_pad(month, width = 2, side = "left", pad = 0),
+                                   "all.csv", sep = "_"))
 
   w <- mapply(FUN = baseballr::scrape_statcast_savant_batter_all,
               as.character(dates$month_begin),
@@ -63,13 +63,13 @@ scrape_statcast_month <- function(obj, year, month) {
     dplyr::bind_rows()
 
   data <- list(w, x, y, z)
-  data <- lapply(data, mutate,
+  data <- lapply(data, dplyr::mutate,
                  sz_top = as.numeric(sz_top),
                  sz_bot = as.numeric(sz_bot))
 
   out <- data %>%
     dplyr::bind_rows() %>%
-    dplyr::arrange_(~game_date)
+    dplyr::arrange(game_date)
 
   readr::write_csv(out, path = file.path(attr(obj, "raw"), dates$filename))
 }

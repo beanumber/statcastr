@@ -1,4 +1,6 @@
 
+[![Travis build status](https://travis-ci.org/beanumber/statcastr.svg?branch=master)](https://travis-ci.org/beanumber/statcastr)
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 statcastr
 =========
