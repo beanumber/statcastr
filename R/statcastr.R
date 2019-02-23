@@ -31,10 +31,12 @@ etl_extract.etl_statcastr <- function(obj, years = 2017, months = 6, ...) {
 scrape_statcast_month <- function(obj, year, month) {
 
   dates <- etl::valid_year_month(year, month, begin = "2015-03-01") %>%
-    mutate_(month_q1 = ~month_begin + lubridate::days(7),
-            month_middle = ~month_begin + lubridate::days(14),
-            month_q3 = ~month_begin + lubridate::days(21),
-            filename = ~paste("statcast", year, month, "all.csv", sep = "-"))
+    mutate(month_q1 = month_begin + lubridate::days(7),
+           month_middle = month_begin + lubridate::days(14),
+           month_q3 = month_begin + lubridate::days(21),
+           filename = paste("statcast", year,
+                            stringr::str_pad(month, width = 2, side = "left", pad = 0),
+                            "all.csv", sep = "_"))
 
   w <- mapply(FUN = baseballr::scrape_statcast_savant_batter_all,
               as.character(dates$month_begin),

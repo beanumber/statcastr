@@ -1,34 +1,43 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-statcastr
-=========
 
-The goal of `statcastr` is to make building a Statcast database easy.
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# statcastr
 
-Installation
-------------
+The goal of `statcastr` is to make building a Statcast database easy. 
+
+## Installation
 
 You can install the released version of `statcastr` from [GitHub](https://www.github.com/beanumber/statcastr) with:
 
-``` r
+```{r, eval=FALSE}
 devtools::install_github("beanumber/statcastr")
 ```
 
-Example
--------
+## Example
 
 For example, once we set up a database connection...
 
-``` r
+```{r example, eval=TRUE, message=FALSE}
 library(tidyverse)
 library(statcastr)
 db <- src_mysql_cnf(dbname = "statcastr")
 sc <- etl("statcastr", db = db, dir = "~/dumps/statcastr")
 ```
 
-...we can download the entire 2017 season's worth of data.
+...we can download the entire 2017 season's worth of data. 
 
-``` r
+```{r, eval=FALSE}
 sc %>%
   etl_extract(year = 2017, month = 4:9) %>%
   etl_transform() %>%
@@ -37,7 +46,7 @@ sc %>%
 
 We now have a database containing 700,000 records.
 
-``` r
+```{r, warning=FALSE}
 sc %>%
   tbl("statcast") %>%
   mutate(the_month = MONTH(STR_TO_DATE(game_date, "%Y-%m-%d"))) %>%
@@ -46,14 +55,5 @@ sc %>%
             num_games = n_distinct(game_pk),
             num_teams = n_distinct(home_team), 
             barrel_pct = sum(barrel) / sum(barrel != "NA"))
-#> # Source:   lazy query [?? x 5]
-#> # Database: mysql 5.7.25-0ubuntu0.16.04.2 [root@127.0.0.1:/statcastr]
-#>   the_month num_records num_games num_teams barrel_pct
-#>       <dbl>       <dbl>     <dbl>     <dbl>      <dbl>
-#> 1         4      121273       369        30     0.0569
-#> 2         5      132850       421        30     0.0556
-#> 3         6      131858       408        30     0.0537
-#> 4         7      125257       376        30     0.0492
-#> 5         8      137587       425        30     0.0505
-#> 6         9      136514       416        30     0.0497
 ```
+
