@@ -19,7 +19,7 @@ globalVariables(c("month_begin", "sz_top", "sz_bot", "game_date"))
 #'   etl_load(tablenames = "statcast")
 #' }
 
-etl_extract.etl_statcastr <- function(obj, years = 2017, months = 6, ...) {
+etl_extract.etl_statcastr <- function(obj, years = 2019, months = 6, ...) {
   dates <- etl::valid_year_month(years, months, begin = "2015-03-01")
 
   mapply(FUN = scrape_statcast_month, dates$year, dates$month, SIMPLIFY = FALSE,
@@ -72,4 +72,22 @@ scrape_statcast_month <- function(obj, year, month) {
     dplyr::arrange(game_date)
 
   readr::write_csv(out, path = file.path(attr(obj, "raw"), dates$filename))
+}
+
+
+#' @rdname etl_extract.etl_statcastr
+#' @export
+
+etl_load.etl_statcastr <- function(obj, years = 2019, months = 6, ...) {
+  dates <- etl::valid_year_month(years, months, begin = "2015-03-01")
+
+  src <- etl::match_files_by_year_months(
+    fs::dir_ls(attr(obj, "load_dir")),
+    pattern = "statcast_%Y_%m_all.csv",
+    years = unique(dates$year),
+    months = unique(dates$month)
+  )
+
+  etl::smart_upload(obj, src = src, tablenames = "statcast", ...)
+  invisible(obj)
 }

@@ -2,9 +2,12 @@
 % Please edit documentation in R/statcastr.R
 \name{etl_extract.etl_statcastr}
 \alias{etl_extract.etl_statcastr}
+\alias{etl_load.etl_statcastr}
 \title{Scrape Statcast data}
 \usage{
-\method{etl_extract}{etl_statcastr}(obj, years = 2017, months = 6, ...)
+\method{etl_extract}{etl_statcastr}(obj, years = 2019, months = 6, ...)
+
+\method{etl_load}{etl_statcastr}(obj, years = 2019, months = 6, ...)
 }
 \arguments{
 \item{obj}{ETL object}

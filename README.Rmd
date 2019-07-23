@@ -33,17 +33,17 @@ For example, once we set up a database connection...
 ```{r example, eval=TRUE, message=FALSE}
 library(tidyverse)
 library(statcastr)
-db <- src_mysql_cnf(dbname = "statcastr")
-sc <- etl("statcastr", db = db, dir = "~/dumps/statcastr")
+db <- src_mysql_cnf(dbname = "statcast")
+sc <- etl("statcastr", db = db, dir = "~/Data/statcastr")
 ```
 
-...we can download the entire 2017 season's worth of data. 
+...we can download the entire 2019 season's worth of data. 
 
 ```{r, eval=FALSE}
 sc %>%
-  etl_extract(year = 2017, month = 4:9) %>%
+  etl_extract(year = 2019, month = 4:7) %>%
   etl_transform() %>%
-  etl_load(tablenames = "statcast")
+  etl_load()
 ```
 
 We now have a database containing 700,000 records.
@@ -51,11 +51,16 @@ We now have a database containing 700,000 records.
 ```{r, warning=FALSE}
 sc %>%
   tbl("statcast") %>%
-  mutate(the_month = MONTH(STR_TO_DATE(game_date, "%Y-%m-%d"))) %>%
+  mutate(the_date = STR_TO_DATE(game_date, "%Y-%m-%d"), 
+         the_year = YEAR(the_date), 
+         the_month = MONTH(the_date)) %>%
+  filter(the_year == 2019) %>%
   group_by(the_month) %>%
-  summarize(num_records = n(), 
-            num_games = n_distinct(game_pk),
-            num_teams = n_distinct(home_team), 
-            barrel_pct = sum(barrel) / sum(barrel != "NA"))
+  summarize(
+    num_records = n(), 
+    num_games = n_distinct(game_pk),
+    num_teams = n_distinct(home_team), 
+    barrel_pct = sum(barrel) / sum(barrel != "NA")
+  )
 ```
 
