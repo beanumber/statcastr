@@ -71,7 +71,7 @@ scrape_statcast_month <- function(obj, year, month) {
     dplyr::bind_rows() %>%
     dplyr::arrange(game_date)
 
-  readr::write_csv(out, path = file.path(attr(obj, "raw"), dates$filename))
+  readr::write_csv(out, path = file.path(attr(obj, "raw"), dates$filename), na = "\\N")
 }
 
 
